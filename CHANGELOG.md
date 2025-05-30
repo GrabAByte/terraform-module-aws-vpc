@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/GrabAByte/terraform-module-aws-vpc/compare/v1.0.0...v1.1.0) (2025-05-30)
+
+
+### Features
+
+* add docs ([3fca8c8](https://github.com/GrabAByte/terraform-module-aws-vpc/commit/3fca8c89df1fc987d698d89b28ba58ac64faec02))
+* add docs ([3422d44](https://github.com/GrabAByte/terraform-module-aws-vpc/commit/3422d44e9d9150040bf1822b568c460d8d75ca0c))
+
 # 1.0.0 (2025-05-30)
 
 
