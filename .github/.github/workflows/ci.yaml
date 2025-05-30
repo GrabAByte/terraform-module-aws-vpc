@@ -1,0 +1,18 @@
+---
+name: CI
+'on':
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions: write-all
+
+jobs:
+  lint:
+    uses: GrabAByte/github-devops-workflows/.github/workflows/terraformLint.yml@0.14.0
+    with:
+      terraformPath: .
+  semantic-release:
+    uses: GrabAByte/github-devops-workflows/.github/workflows/semanticRelease.yml@0.14.0
+    needs: [lint]
