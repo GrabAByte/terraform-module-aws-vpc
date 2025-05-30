@@ -4,7 +4,6 @@ resource "aws_vpc" "main" {
 
 data "aws_availability_zones" "available" {}
 
-# TO DO: reduce hackiness / iterate over a List
 # higher availability
 resource "aws_subnet" "private_subnet_0" {
   vpc_id            = aws_vpc.main.id
