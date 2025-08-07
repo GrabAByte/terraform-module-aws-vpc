@@ -25,16 +25,33 @@ resource "aws_vpc_endpoint" "s3" {
   route_table_ids   = [aws_vpc.main.main_route_table_id]
 }
 
+# TODO: for_each var.endpoints
+resource "aws_vpc_endpoint" "dynamodb" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.region}.dynamodb"
+  vpc_endpoint_type = var.vpc_endpoint_type
+  route_table_ids   = [aws_vpc.main.main_route_table_id]
+}
+
 # TODO: for_each var.endpoints (tricky)
 resource "aws_security_group" "security_group" {
   name   = "shared_security_group"
   vpc_id = aws_vpc.main.id
 
+  # S3
   egress {
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
     prefix_list_ids = [aws_vpc_endpoint.s3.prefix_list_id]
+  }
+
+  # DynamoDB
+  egress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    prefix_list_ids = [aws_vpc_endpoint.dynamodb.prefix_list_id]
   }
 }
 
