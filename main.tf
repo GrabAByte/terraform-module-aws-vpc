@@ -17,7 +17,7 @@ resource "aws_subnet" "private_subnet_1" {
   availability_zone = data.aws_availability_zones.available.names[1]
 }
 
-# TODO: for_each var.endpoints
+# TODO: start for_each var.endpoints
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${var.region}.s3"
@@ -25,7 +25,6 @@ resource "aws_vpc_endpoint" "s3" {
   route_table_ids   = [aws_vpc.main.main_route_table_id]
 }
 
-# TODO: for_each var.endpoints
 resource "aws_vpc_endpoint" "dynamodb" {
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${var.region}.dynamodb"
@@ -33,29 +32,29 @@ resource "aws_vpc_endpoint" "dynamodb" {
   route_table_ids   = [aws_vpc.main.main_route_table_id]
 }
 
-# TODO: for_each var.endpoints (tricky)
 resource "aws_security_group" "security_group" {
-  name   = "shared_security_group"
-  vpc_id = aws_vpc.main.id
+  name        = "shared_security_group"
+  description = "shared security group"
+  vpc_id      = aws_vpc.main.id
 
-  # S3
   egress {
+    description     = "Allow outbound to AWS S3 service"
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
     prefix_list_ids = [aws_vpc_endpoint.s3.prefix_list_id]
   }
 
-  # DynamoDB
   egress {
+    description     = "Allow outbound to AWS Dynamo DB service"
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
     prefix_list_ids = [aws_vpc_endpoint.dynamodb.prefix_list_id]
   }
 }
+# TODO: end for_each var.endpoints
 
-# restrict access to only required ports
 resource "aws_network_acl" "private_nacl" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = [aws_subnet.private_subnet_0.id, aws_subnet.private_subnet_1.id]
