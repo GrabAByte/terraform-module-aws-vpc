@@ -41,6 +41,7 @@ resource "aws_network_acl" "private_nacl" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = [aws_subnet.private_subnet_0.id, aws_subnet.private_subnet_1.id]
 
+  # TODO: create a dynamic list of rules as variable input
   egress {
     rule_no    = 100
     protocol   = "6"
