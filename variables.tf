@@ -15,6 +15,19 @@ variable "vpc_cidr_block" {
   default     = "10.0.0.0/16"
 }
 
+# TODO: Make iterable
+variable "subnet_0_cidr" {
+  type        = string
+  description = "The CIDR block range to allocate to the VPC"
+  default     = "10.0.0.0/24"
+}
+
+variable "subnet_1_cidr" {
+  type        = string
+  description = "The CIDR block range to allocate to the VPC"
+  default     = "10.1.0.0/24"
+}
+
 variable "nacl_rules" {
   description = "List of ingress and egress NACL rules"
   type = list(object({

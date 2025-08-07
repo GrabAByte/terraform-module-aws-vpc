@@ -7,16 +7,17 @@ data "aws_availability_zones" "available" {}
 # higher availability
 resource "aws_subnet" "private_subnet_0" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.0.0/24"
+  cidr_block        = var.subnet_0_cidr
   availability_zone = data.aws_availability_zones.available.names[0]
 }
 
 resource "aws_subnet" "private_subnet_1" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = var.subnet_1_cidr
   availability_zone = data.aws_availability_zones.available.names[1]
 }
 
+# TODO: for_each var.endpoints
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${var.region}.s3"
@@ -24,6 +25,7 @@ resource "aws_vpc_endpoint" "s3" {
   route_table_ids   = [aws_vpc.main.main_route_table_id]
 }
 
+# TODO: for_each var.endpoints (tricky)
 resource "aws_security_group" "security_group" {
   name   = "shared_security_group"
   vpc_id = aws_vpc.main.id

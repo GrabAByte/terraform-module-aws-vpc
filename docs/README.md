@@ -35,6 +35,8 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_nacl_rules"></a> [nacl\_rules](#input\_nacl\_rules) | List of ingress and egress NACL rules | <pre>list(object({<br/>    rule_number = number<br/>    protocol    = string<br/>    rule_action = string<br/>    egress      = bool<br/>    cidr_block  = string<br/>    from_port   = number<br/>    to_port     = number<br/>  }))</pre> | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The AWS region in which to deploy | `string` | `"eu-west-2"` | no |
+| <a name="input_subnet_0_cidr"></a> [subnet\_0\_cidr](#input\_subnet\_0\_cidr) | The CIDR block range to allocate to the VPC | `string` | `"10.0.0.0/24"` | no |
+| <a name="input_subnet_1_cidr"></a> [subnet\_1\_cidr](#input\_subnet\_1\_cidr) | The CIDR block range to allocate to the VPC | `string` | `"10.1.0.0/24"` | no |
 | <a name="input_vpc_cidr_block"></a> [vpc\_cidr\_block](#input\_vpc\_cidr\_block) | The CIDR block range to allocate to the VPC | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_vpc_endpoint_type"></a> [vpc\_endpoint\_type](#input\_vpc\_endpoint\_type) | n/a | `string` | `"Gateway"` | no |
 
