@@ -7,16 +7,17 @@ data "aws_availability_zones" "available" {}
 # higher availability
 resource "aws_subnet" "private_subnet_0" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.0.0/24"
+  cidr_block        = var.subnet_0_cidr
   availability_zone = data.aws_availability_zones.available.names[0]
 }
 
 resource "aws_subnet" "private_subnet_1" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = var.subnet_1_cidr
   availability_zone = data.aws_availability_zones.available.names[1]
 }
 
+# TODO: start for_each var.endpoints
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${var.region}.s3"
@@ -24,75 +25,53 @@ resource "aws_vpc_endpoint" "s3" {
   route_table_ids   = [aws_vpc.main.main_route_table_id]
 }
 
+resource "aws_vpc_endpoint" "dynamodb" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.region}.dynamodb"
+  vpc_endpoint_type = var.vpc_endpoint_type
+  route_table_ids   = [aws_vpc.main.main_route_table_id]
+}
+
 resource "aws_security_group" "security_group" {
-  name   = "shared_security_group"
-  vpc_id = aws_vpc.main.id
+  name        = "shared_security_group"
+  description = "shared security group"
+  vpc_id      = aws_vpc.main.id
 
   egress {
+    description     = "Allow outbound to AWS S3 service"
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
     prefix_list_ids = [aws_vpc_endpoint.s3.prefix_list_id]
   }
-}
 
-# restrict access to only required ports
+  egress {
+    description     = "Allow outbound to AWS Dynamo DB service"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    prefix_list_ids = [aws_vpc_endpoint.dynamodb.prefix_list_id]
+  }
+}
+# TODO: end for_each var.endpoints
+
 resource "aws_network_acl" "private_nacl" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = [aws_subnet.private_subnet_0.id, aws_subnet.private_subnet_1.id]
+}
 
-  egress {
-    rule_no    = 100
-    protocol   = "6"
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 443
-    to_port    = 443
+resource "aws_network_acl_rule" "nacl_rules" {
+  for_each = {
+    for rule in var.nacl_rules : "${rule.egress}-${rule.rule_number}" => rule
   }
 
-  egress {
-    rule_no    = 110
-    protocol   = "6"
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 1024
-    to_port    = 65535
-  }
+  network_acl_id = aws_network_acl.private_nacl.id
 
-  ingress {
-    rule_no    = 100
-    protocol   = "6"
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 443
-    to_port    = 443
-  }
-
-  ingress {
-    rule_no    = 110
-    protocol   = "6"
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 1024
-    to_port    = 65535
-  }
-
-  # Deny everything else
-  ingress {
-    rule_no    = 200
-    protocol   = "-1"
-    action     = "deny"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 0
-    to_port    = 0
-  }
-
-  egress {
-    rule_no    = 200
-    protocol   = "-1"
-    action     = "deny"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 0
-    to_port    = 0
-  }
+  rule_number = each.value.rule_number
+  protocol    = each.value.protocol
+  rule_action = each.value.rule_action
+  egress      = each.value.egress
+  cidr_block  = each.value.cidr_block
+  from_port   = each.value.from_port
+  to_port     = each.value.to_port
 }
