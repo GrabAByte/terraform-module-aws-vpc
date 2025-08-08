@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/GrabAByte/terraform-module-aws-vpc/compare/v1.1.0...v1.2.0) (2025-08-08)
+
+
+### Features
+
+* extend functionality to support dynamo db ([#3](https://github.com/GrabAByte/terraform-module-aws-vpc/issues/3)) ([6cedb39](https://github.com/GrabAByte/terraform-module-aws-vpc/commit/6cedb39b038692e36c6d2a6cc33ea1340664969b))
+
 # [1.1.0](https://github.com/GrabAByte/terraform-module-aws-vpc/compare/v1.0.0...v1.1.0) (2025-05-30)
 
 
