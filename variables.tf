@@ -25,7 +25,7 @@ variable "subnet_0_cidr" {
 variable "subnet_1_cidr" {
   type        = string
   description = "The CIDR block range to allocate to the VPC"
-  default     = "10.1.0.0/24"
+  default     = "10.0.1.0/24"
 }
 
 variable "nacl_rules" {
