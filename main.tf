@@ -17,24 +17,18 @@ resource "aws_subnet" "private_subnet_1" {
   availability_zone = data.aws_availability_zones.available.names[1]
 }
 
-# TODO: start for_each var.endpoints
 resource "aws_vpc_endpoint" "s3" {
+  count             = var.s3_integration ? 1 : 0
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${var.region}.s3"
   vpc_endpoint_type = var.vpc_endpoint_type
   route_table_ids   = [aws_vpc.main.main_route_table_id]
 }
 
-resource "aws_vpc_endpoint" "dynamodb" {
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.${var.region}.dynamodb"
-  vpc_endpoint_type = var.vpc_endpoint_type
-  route_table_ids   = [aws_vpc.main.main_route_table_id]
-}
-
-resource "aws_security_group" "security_group" {
-  name        = "shared_security_group"
-  description = "shared security group"
+resource "aws_security_group" "s3_security_group" {
+  count       = var.s3_integration ? 1 : 0
+  name        = "s3_security_group"
+  description = "S3 security group"
   vpc_id      = aws_vpc.main.id
 
   egress {
@@ -44,6 +38,21 @@ resource "aws_security_group" "security_group" {
     protocol        = "tcp"
     prefix_list_ids = [aws_vpc_endpoint.s3.prefix_list_id]
   }
+}
+
+resource "aws_vpc_endpoint" "dynamodb" {
+  count             = var.dynamodb_integration ? 1 : 0
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.region}.dynamodb"
+  vpc_endpoint_type = var.vpc_endpoint_type
+  route_table_ids   = [aws_vpc.main.main_route_table_id]
+}
+
+resource "aws_security_group" "dynamodb_security_group" {
+  count       = var.dynamodb_integration ? 1 : 0
+  name        = "dynamodb_security_group"
+  description = "dynamo DB security group"
+  vpc_id      = aws_vpc.main.id
 
   egress {
     description     = "Allow outbound to AWS Dynamo DB service"
@@ -53,7 +62,6 @@ resource "aws_security_group" "security_group" {
     prefix_list_ids = [aws_vpc_endpoint.dynamodb.prefix_list_id]
   }
 }
-# TODO: end for_each var.endpoints
 
 resource "aws_network_acl" "private_nacl" {
   vpc_id     = aws_vpc.main.id

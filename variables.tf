@@ -3,6 +3,19 @@ variable "vpc_endpoint_type" {
   default = "Gateway"
 }
 
+variable "nacl_rules" {
+  description = "List of ingress and egress NACL rules"
+  type = list(object({
+    rule_number = number
+    protocol    = string
+    rule_action = string
+    egress      = bool
+    cidr_block  = string
+    from_port   = number
+    to_port     = number
+  }))
+}
+
 variable "region" {
   type        = string
   description = "The AWS region in which to deploy"
@@ -28,15 +41,14 @@ variable "subnet_1_cidr" {
   default     = "10.0.1.0/24"
 }
 
-variable "nacl_rules" {
-  description = "List of ingress and egress NACL rules"
-  type = list(object({
-    rule_number = number
-    protocol    = string
-    rule_action = string
-    egress      = bool
-    cidr_block  = string
-    from_port   = number
-    to_port     = number
-  }))
+variable "s3_integration" {
+  type        = bool
+  description = "Whether the S3 service is integrated into VPC setup"
+  default     = false
+}
+
+variable "dynamodb_integration" {
+  type        = bool
+  description = "Whether the Dynamo DB service is integration into VPC setup"
+  default     = false
 }
