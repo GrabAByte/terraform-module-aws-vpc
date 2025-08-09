@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/GrabAByte/terraform-module-aws-vpc/compare/v1.2.0...v1.2.1) (2025-08-09)
+
+
+### Bug Fixes
+
+* add conditional on gateway integration configurations ([#4](https://github.com/GrabAByte/terraform-module-aws-vpc/issues/4)) ([3a0da41](https://github.com/GrabAByte/terraform-module-aws-vpc/commit/3a0da41e61cbe8a89d5037057aa1a3204e204d13))
+
 # [1.2.0](https://github.com/GrabAByte/terraform-module-aws-vpc/compare/v1.1.0...v1.2.0) (2025-08-08)
 
 
