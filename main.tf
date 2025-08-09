@@ -19,6 +19,7 @@ resource "aws_subnet" "private_subnet_1" {
 
 resource "aws_vpc_endpoint" "s3" {
   count             = var.vpc_endpoint_type == "Gateway" ? 1 : 0
+  vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${var.region}.s3"
   vpc_endpoint_type = var.vpc_endpoint_type
   route_table_ids   = [aws_vpc.main.main_route_table_id]
