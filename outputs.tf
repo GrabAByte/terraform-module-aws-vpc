@@ -1,5 +1,5 @@
 output "security_groups" {
-  value = aws_security_group.security_group.id
+  value = aws_security_group.security_group[0].id
 }
 
 output "vpc_subnet_0" {
