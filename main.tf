@@ -1,7 +1,7 @@
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr_block
 
-  tags = vars.tags
+  tags = var.tags
 }
 
 data "aws_availability_zones" "available" {}
