@@ -28,6 +28,11 @@ variable "subnet_1_cidr" {
   default     = "10.0.1.0/24"
 }
 
+variable "tags" {
+  type        = map(any)
+  description = "The project tags"
+}
+
 variable "nacl_rules" {
   description = "List of ingress and egress NACL rules"
   type = list(object({
