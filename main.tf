@@ -1,5 +1,7 @@
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr_block
+
+  tags = vars.tags
 }
 
 data "aws_availability_zones" "available" {}
@@ -54,6 +56,8 @@ resource "aws_security_group" "security_group" {
     protocol        = "tcp"
     prefix_list_ids = [aws_vpc_endpoint.dynamodb[count.index].prefix_list_id]
   }
+
+  tags = var.tags
 }
 
 resource "aws_network_acl" "private_nacl" {
