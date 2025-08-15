@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/GrabAByte/terraform-module-aws-vpc/compare/v1.3.0...v1.3.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* descriptions ([#6](https://github.com/GrabAByte/terraform-module-aws-vpc/issues/6)) ([22a3d5f](https://github.com/GrabAByte/terraform-module-aws-vpc/commit/22a3d5feb819f3549a61151d12cddeda884291c0))
+
 # [1.3.0](https://github.com/GrabAByte/terraform-module-aws-vpc/compare/v1.2.1...v1.3.0) (2025-08-14)
 
 
