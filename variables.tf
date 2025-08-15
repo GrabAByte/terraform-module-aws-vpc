@@ -1,6 +1,7 @@
 variable "vpc_endpoint_type" {
-  type    = string
-  default = "Gateway"
+  type        = string
+  description = "The type of VPC endpoint, which can be either Interface or Gateway"
+  default     = "Gateway"
 }
 
 variable "region" {
@@ -24,7 +25,7 @@ variable "subnet_0_cidr" {
 
 variable "subnet_1_cidr" {
   type        = string
-  description = "The CIDR block range to allocate to the VPC"
+  description = "The secondary CIDR block range to allocate to the VPC"
   default     = "10.0.1.0/24"
 }
 
@@ -34,7 +35,6 @@ variable "tags" {
 }
 
 variable "nacl_rules" {
-  description = "List of ingress and egress NACL rules"
   type = list(object({
     rule_number = number
     protocol    = string
@@ -44,4 +44,5 @@ variable "nacl_rules" {
     from_port   = number
     to_port     = number
   }))
+  description = "List of ingress and egress NACL rules"
 }
